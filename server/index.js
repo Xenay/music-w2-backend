@@ -24,15 +24,15 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(morgan("dev"));
+app.get("/", (req, res) => {
+  console.log("...");
+});
 
 const posts = require("./routes/api/posts");
 
-app.get("/login", (req, res) => {
-  console.log("Hello MEVN Soldier");
-});
 const userRoutes = require("./user/route/user"); //bring in our user routes
 
-app.use("/api/posts", posts);
+app.use("/user", userRoutes);
 
 const port = process.env.PORT || 5000;
 
