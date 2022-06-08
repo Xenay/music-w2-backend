@@ -15,6 +15,7 @@ router.post("/", async (req, res) => {
   await post.insertOne({
     text: req.body.text,
     createdAt: new Date(),
+    childern: new Object(),
   });
   res.status(201).send();
 });
@@ -37,5 +38,13 @@ async function loadPostsCollection() {
   );
   return client.db("test").collection("posts");
 }
+
+router.get("/:id", async (req, res) => {
+  const post = await loadPostsCollection();
+
+  await post.find({ url: id }).toArray();
+
+  res.send(":id");
+});
 
 module.exports = router;
