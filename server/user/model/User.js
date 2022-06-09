@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema({
   ],
 });
 
-//this method will hash the password before saving the user model
+//hash the password
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
@@ -33,7 +33,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-//this method generates an auth token for the user
+//generate auth token
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
@@ -45,7 +45,7 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
-//this method search for a user by email and password.
+//search for a user by email and password.
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
