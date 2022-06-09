@@ -1,5 +1,7 @@
 const express = require("express");
 const mongodb = require("mongodb");
+const { system } = require("nodemon/lib/config");
+const { db } = require("../../user/model/User");
 
 const router = express.Router();
 
@@ -39,12 +41,12 @@ async function loadPostsCollection() {
   return client.db("test").collection("posts");
 }
 
+//get post with id
 router.get("/:id", async (req, res) => {
-  const post = await loadPostsCollection();
-
-  await post.find({ url: id }).toArray();
-
-  res.send(":id");
+  const posts = await loadPostsCollection();
+  const id2 = mongodb.ObjectId(req.params.id);
+  //const id = req.params.id;
+  res.send(await posts.find({ _id: id2 }).toArray());
 });
 
 module.exports = router;
