@@ -1,12 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const config = require("./user/config/db");
 
 const app = express();
-
+dotenv.config();
 //configure database and mongoose
 
 mongoose
