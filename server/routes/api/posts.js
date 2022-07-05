@@ -1,6 +1,8 @@
 const express = require("express");
 const mongodb = require("mongodb");
 const { system } = require("nodemon/lib/config");
+const Order = require("../../user/model/Order");
+const Post = require("../../user/model/Post");
 const { db } = require("../../user/model/User");
 
 const router = express.Router();
@@ -53,9 +55,9 @@ async function loadOrderCollection() {
 
 //get post with id
 router.get("/:id", async (req, res) => {
-  console.log("id");
+  console.log(req.params.id);
   const posts = await loadPostsCollection();
-  const id2 = mongodb.ObjectId(req.params.id);
+  const id2 = req.params.id;
   //const id = req.params.id;
   res.send(await posts.find({ _id: id2 }).toArray());
 });
@@ -109,6 +111,66 @@ router.put("/post/:id", async (req, res) => {
 
   res.status(201).send();
 });
+
+router.put("/user/", async (req, res) => {
+  const name = req.body.id;
+  const point = req.body.point;
+  console.log(name, point);
+
+  const client = await mongodb.MongoClient.connect(
+    "mongodb+srv://LukaGrubesa:atlas123@cluster0.apyby.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+    }
+  );
+
+  client
+    .db("test")
+    .collection("users")
+    .updateOne(
+      { name: name },
+      {
+        $inc: { points: point },
+      }
+    );
+
+  res.status(201).send();
+});
+
+router.put("/user/buy", async (req, res) => {
+  const name = req.body.id;
+  const point = req.body.point;
+  console.log(name, point);
+
+  const client = await mongodb.MongoClient.connect(
+    "mongodb+srv://LukaGrubesa:atlas123@cluster0.apyby.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+    }
+  );
+
+  client
+    .db("test")
+    .collection("users")
+    .updateOne(
+      { name: name },
+      {
+        $inc: { points: -point },
+      }
+    );
+
+  const order = new Order({
+    name: req.body.name,
+    postCode: req.body.postCode,
+    email: req.body.email,
+    dateOfPurchace: new Date(),
+    adress: req.body.adress,
+  });
+  let data = await order.save();
+
+  res.status(201).send();
+});
+
 router.put("/abc", async (req, res) => {
   res.send("send");
 });
@@ -120,7 +182,7 @@ router.get("/find/:id", async (req, res) => {
       useNewUrlParser: true,
     }
   );
-  let cica = mongodb.ObjectId(req.params.id);
+  let cica = mongodb.ObjectID(req.params.id);
 
   res.send(
     await client.db("test").collection("posts").find({ _id: cica }).toArray()

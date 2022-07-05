@@ -43,7 +43,13 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
-    { _id: user._id, name: user.name, email: user.email },
+    {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      points: user.points,
+    },
     "secret",
     {
       algorithm: "HS512",
