@@ -127,7 +127,7 @@ router.put("/user/", async (req, res) => {
   client
     .db("test")
     .collection("users")
-    .updateOne(
+    .updateMany(
       { name: name },
       {
         $inc: { points: point },
@@ -152,7 +152,7 @@ router.put("/user/buy", async (req, res) => {
   client
     .db("test")
     .collection("users")
-    .updateOne(
+    .updateMany(
       { name: name },
       {
         $inc: { points: -point },
@@ -171,10 +171,41 @@ router.put("/user/buy", async (req, res) => {
   res.status(201).send();
 });
 
+router.get("/findpoint/:id", async (req, res) => {
+  const name2 = req.params.id;
+  console.log(name2);
+  const client = await mongodb.MongoClient.connect(
+    "mongodb+srv://LukaGrubesa:atlas123@cluster0.apyby.mongodb.net/?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+    }
+  );
+
+  res.send(
+    await client
+      .db("test")
+      .collection("users")
+      .findOne(
+        { name: name2 },
+        {
+          projection: {
+            _id: 0,
+            name: 0,
+            email: 0,
+            password: 0,
+            isAdmin: 0,
+            tokens: 0,
+            __v: 0,
+          },
+        }
+      )
+  );
+});
+
 router.put("/abc", async (req, res) => {
   res.send("send");
 });
-module.exports = router;
+
 router.get("/find/:id", async (req, res) => {
   const client = await mongodb.MongoClient.connect(
     "mongodb+srv://LukaGrubesa:atlas123@cluster0.apyby.mongodb.net/?retryWrites=true&w=majority",
@@ -188,3 +219,4 @@ router.get("/find/:id", async (req, res) => {
     await client.db("test").collection("posts").find({ _id: cica }).toArray()
   );
 });
+module.exports = router;
