@@ -36,6 +36,6 @@ const userRoutes = require("./user/route/user"); //bring in our user routes
 app.use("/user", userRoutes);
 app.use("/api/posts", posts);
 
-const port = process.env.PORT || 5000;
+const port = process.env.MONGODB_URL || 5000;
 
 app.listen(port, () => console.log("Server started on port ${port} "));
